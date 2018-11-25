@@ -5,6 +5,8 @@
  */
 
 import java.net.URL;
+import java.sql.Time;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -46,6 +48,21 @@ public class MainPaneController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        /*//String message = messageText.getText();
+        Time remTime = Time.valueOf("17:44:44");
+        Reminder createReminder = new Reminder("test", remTime);
+
+
+        List<Reminder> rList = Reminder.getReminderList();
+        rList.add(createReminder);
+        Reminder.setReminderList(rList);
+
+        for(Reminder rem : Reminder.getReminderList()) {
+            System.out.println(rem.getMessage());
+        }*/
+
+
+
         reminderListView.setCellFactory(param -> {
             ListCell<Reminder> cell = new ListCell<Reminder>() {
                 @Override
@@ -97,29 +114,6 @@ public class MainPaneController implements Initializable {
     private void quitAction(ActionEvent event) {
         Platform.exit();
         System.exit(0);
-    }
-
-    void addRem(Reminder addRem){
-
-        reminderListView.setCellFactory(param -> {
-            ListCell<Reminder> cell = new ListCell<Reminder>() {
-                @Override
-                protected void updateItem(Reminder item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if(item != null) {
-                        setText(item.getTime().toString() + "\n" + item.getMessage());
-                    }
-                }
-            };
-            return new ListCell<Reminder>();
-        });
-
-        ObservableList<Reminder> remList = FXCollections.observableArrayList();
-        for(Reminder rem : Reminder.getReminderList()) {
-            remList.add(rem);
-        }
-        reminderListView.setItems(remList);
-
     }
     
 }

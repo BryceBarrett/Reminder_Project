@@ -1,4 +1,5 @@
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,8 +29,6 @@ public class PopOutController implements Initializable {
     @FXML
     private TextField timeText;
 
-    private Reminder createReminder;
-
     /**
      * Initializes the controller class.
      */
@@ -43,10 +42,16 @@ public class PopOutController implements Initializable {
 
         String message = messageText.getText();
         Time remTime = Time.valueOf(timeText.getText());
-        createReminder = new Reminder(message, remTime);
+        Reminder createReminder = new Reminder(message, remTime);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainPane.fxml"));
-        MainPaneController controller = loader.getController();
+
+        List<Reminder> rList = Reminder.getReminderList();
+        rList.add(createReminder);
+        Reminder.setReminderList(rList);
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("MainPane.fxml"));
+        //MainPaneController controller = loader.getController();
         //controller.addRem(createReminder);
 
         MainLauncher.primaryStage.hide();
