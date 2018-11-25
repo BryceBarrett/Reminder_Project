@@ -15,7 +15,9 @@ and open the template in the editor.
 }
 
 .button {
-    -fx-background-color: radial-gradient(dimgrey, maroon, midnightblue);
+    -fx-background-color: radial-gradient(radius 180%, black, dimgrey, midnightblue);
     -fx-font-family: TimesNewRoman 16pt;
+    -fx-text-fill: ghostwhite;
+    -fx-border-color: midnightblue;
 }
 
