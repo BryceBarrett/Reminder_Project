@@ -1,2 +1,5 @@
 /.nb-gradle/
 /App/build/
+.DS_Store
+out/
+*.class
