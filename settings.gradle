@@ -1,0 +1,6 @@
+rootProject.name = 'org.barrett'
+include 'reminder'
+findProject(':reminder')?.name = 'org.barrett'
+include 'App'
+findProject(':App')?.name = 'org.barrett.app'
+
