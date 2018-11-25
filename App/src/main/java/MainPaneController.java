@@ -74,6 +74,7 @@ public class MainPaneController implements Initializable {
 
     @FXML
     private void quitAction(ActionEvent event) {
+        Reminder.serializeList();
         Platform.exit();
         System.exit(0);
     }

@@ -159,7 +159,7 @@ public class Reminder {
         return retVal;
     }
 
-    private static void serializeList() {
+    public static void serializeList() {
         try {
             File file = new File(File.separator + System.getProperty("user.home")
                     + File.separator + "Reminder_Project_Barrett");
