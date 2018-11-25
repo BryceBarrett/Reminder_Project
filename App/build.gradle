@@ -2,6 +2,12 @@ plugins {
     id 'java'
 }
 
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'MainLauncher'
+}
+
+
+
 group 'org.barrett'
 version '1.0-SNAPSHOT'
 
