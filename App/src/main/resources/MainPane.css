@@ -9,13 +9,13 @@ and open the template in the editor.
 */
 
 .root {
-    -fx-background-image: linear-gradient(to bottom right, black, white, blue);
+    -fx-background-color: linear-gradient(to bottom right, black, white, blue);
     -fx-font-family: "Times New Roman";
     -fx-font-size: 14pt;
 }
 
 .button {
-    -fx-background-image: radial-gradient(dimgrey, maroon, midnightblue);
+    -fx-background-color: radial-gradient(dimgrey, maroon, midnightblue);
     -fx-font-family: TimesNewRoman 16pt;
 }
 
