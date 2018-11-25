@@ -9,6 +9,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+
 import java.sql.Time;
 
 /**
@@ -40,15 +42,15 @@ public class PopOutController implements Initializable {
     private void newReminderAction(ActionEvent event) throws Exception {
 
         String message = messageText.getText();
-        //Time remTime = Time.valueOf(timeText.getText());
-        //createReminder = new Reminder(message, remTime);
+        Time remTime = Time.valueOf(timeText.getText());
+        createReminder = new Reminder(message, remTime);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainPane.fxml"));
         MainPaneController controller = loader.getController();
         //controller.addRem(createReminder);
 
         MainLauncher.primaryStage.hide();
-        Scene scene = loader.load();
+        Scene scene = new Scene(loader.load());
         MainLauncher.primaryStage.setScene(scene);
 
         MainLauncher.primaryStage.show();

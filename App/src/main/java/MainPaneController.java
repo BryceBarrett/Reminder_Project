@@ -39,7 +39,7 @@ public class MainPaneController implements Initializable {
     @FXML
     private Button quitButton;
 
-    private ObservableList<Reminder> remList = FXCollections.observableArrayList();
+    //private ObservableList<Reminder> remList = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller class.
@@ -59,7 +59,7 @@ public class MainPaneController implements Initializable {
             return new ListCell<Reminder>();
         });
         
-        //ObservableList<Reminder> remList = FXCollections.observableArrayList();
+        ObservableList<Reminder> remList = FXCollections.observableArrayList();
         for(Reminder rem : Reminder.getReminderList()) {
             remList.add(rem);
         }
@@ -99,9 +99,25 @@ public class MainPaneController implements Initializable {
         System.exit(0);
     }
 
-    public void addRem(Reminder rem){
+    void addRem(Reminder addRem){
 
-        remList.add(rem);
+        reminderListView.setCellFactory(param -> {
+            ListCell<Reminder> cell = new ListCell<Reminder>() {
+                @Override
+                protected void updateItem(Reminder item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(item != null) {
+                        setText(item.getTime().toString() + "\n" + item.getMessage());
+                    }
+                }
+            };
+            return new ListCell<Reminder>();
+        });
+
+        ObservableList<Reminder> remList = FXCollections.observableArrayList();
+        for(Reminder rem : Reminder.getReminderList()) {
+            remList.add(rem);
+        }
         reminderListView.setItems(remList);
 
     }
