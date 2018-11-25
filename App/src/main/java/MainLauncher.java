@@ -1,21 +1,41 @@
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Window;
 
 public class MainLauncher extends Application {
+
+    public static Stage primaryStage;
+    public static Window primaryStageWindow;
+
     public static void main(String[] args) {
-        Application.launch(MainLauncher.class, args);
+        launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        this.primaryStage = primaryStage;
 
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("MainPane.fxml"));
-        primaryStage.setScene(new Scene(root));
+        Parent root = new AnchorPane();
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStageWindow = primaryStage.getScene().getWindow();
+
+        primaryStage.setOnCloseRequest(val -> {
+            primaryStage.hide();
+        });
+
+        scene.setRoot(FXMLLoader.load(getClass().getResource("MainPane.fxml")));
+
         primaryStage.show();
+        primaryStage.requestFocus();
 
+        primaryStage.setMinHeight(scene.getHeight());
+        primaryStage.setMinWidth(scene.getWidth());
     }
 }
