@@ -7,10 +7,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="491.0" stylesheets="@MainPane.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainPaneController">
     <children>
-        <ListView fx:id="reminderListView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <ListView fx:id="reminderListView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         <AnchorPane prefHeight="478.0" prefWidth="287.0">
             <children>
                 <GridPane alignment="CENTER" prefHeight="478.0" prefWidth="286.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -26,6 +27,11 @@
                         <Button fx:id="newReminderButton" alignment="CENTER" mnemonicParsing="false" onAction="#newReminderAction" prefHeight="108.0" prefWidth="183.0" text="New Reminder" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                         <Button fx:id="deleteReminderButton" alignment="CENTER" mnemonicParsing="false" onAction="#deleteReminderAction" prefHeight="108.0" prefWidth="183.0" text="Delete Reminder" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                         <Button fx:id="modifyReminderButton" alignment="CENTER" layoutX="62.0" layoutY="10.0" mnemonicParsing="false" onAction="#modifyReminderAction" prefHeight="108.0" prefWidth="183.0" text="Modify Reminder" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Button id="quitButton" fx:id="quitButton" mnemonicParsing="false" onAction="#quitAction" text="Quit" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                     <font>
+                        <Font size="7.0" />
+                     </font>
+                  </Button>
                     </children>
                 </GridPane>
             </children>

@@ -6,6 +6,7 @@
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,6 +32,8 @@ public class MainPaneController implements Initializable {
     private Button deleteReminderButton;
     @FXML
     private Button modifyReminderButton;
+    @FXML
+    private Button quitButton;
 
     /**
      * Initializes the controller class.
@@ -67,6 +70,12 @@ public class MainPaneController implements Initializable {
 
     @FXML
     private void modifyReminderAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void quitAction(ActionEvent event) {
+        Platform.exit();
+        System.exit(0);
     }
     
 }
