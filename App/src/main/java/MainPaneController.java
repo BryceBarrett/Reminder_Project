@@ -11,11 +11,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * FXML Controller class
@@ -35,6 +39,8 @@ public class MainPaneController implements Initializable {
     @FXML
     private Button quitButton;
 
+    private ObservableList<Reminder> remList = FXCollections.observableArrayList();
+
     /**
      * Initializes the controller class.
      */
@@ -53,7 +59,7 @@ public class MainPaneController implements Initializable {
             return new ListCell<Reminder>();
         });
         
-        ObservableList<Reminder> remList = FXCollections.observableArrayList();
+        //ObservableList<Reminder> remList = FXCollections.observableArrayList();
         for(Reminder rem : Reminder.getReminderList()) {
             remList.add(rem);
         }
@@ -61,7 +67,22 @@ public class MainPaneController implements Initializable {
     }    
 
     @FXML
-    private void newReminderAction(ActionEvent event) {
+    private void newReminderAction(ActionEvent event) throws Exception {
+
+
+        Parent root = FXMLLoader.load(getClass().getResource("PopOut.fxml"));
+        Scene scene = new Scene(root);
+
+        MainLauncher.primaryStage.hide();
+        MainLauncher.primaryStage.setScene(scene);
+
+
+        MainLauncher.primaryStage.show();
+        MainLauncher.primaryStage.requestFocus();
+
+        MainLauncher.primaryStage.setMinHeight(scene.getHeight());
+        MainLauncher.primaryStage.setMinWidth(scene.getWidth());
+
     }
 
     @FXML
@@ -76,6 +97,13 @@ public class MainPaneController implements Initializable {
     private void quitAction(ActionEvent event) {
         Platform.exit();
         System.exit(0);
+    }
+
+    public void addRem(Reminder rem){
+
+        remList.add(rem);
+        reminderListView.setItems(remList);
+
     }
     
 }
