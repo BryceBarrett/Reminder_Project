@@ -1,5 +1,6 @@
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -27,7 +28,9 @@ public class MainLauncher extends Application {
         primaryStageWindow = primaryStage.getScene().getWindow();
 
         primaryStage.setOnCloseRequest(val -> {
-            primaryStage.hide();
+            Reminder.serializeList();
+            Platform.exit();
+            System.exit(0);
         });
 
         scene.setRoot(FXMLLoader.load(getClass().getResource("MainPane.fxml")));

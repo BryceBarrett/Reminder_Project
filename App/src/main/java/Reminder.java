@@ -5,18 +5,19 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class Reminder {
+public class Reminder implements Serializable {
 
     private static int count;
     private static Semaphore countSem = new Semaphore(1);
     private static List<Reminder> reminderList = deserializeList();
-    private Thread thread;
+    private transient Thread thread;
     private Time time;
     private String message;
 
@@ -109,30 +110,12 @@ public class Reminder {
                     + File.separator + "Reminder_Project_Barrett");
             if (file.exists() && !file.isDirectory()) {
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-                retVal = (ArrayList<Reminder>) ois.readObject();
+                retVal = (ArrayList) ois.readObject();
             } else {
                 retVal = new ArrayList<>();
             }
             for (Reminder rem : retVal) {
-                if (rem.getThread() != null && rem.getThread().isAlive()) {
-                    rem.getThread().interrupt();
-                    rem.setThread(new Thread(() -> {
-                        try {
-                            countSem.acquire();
-                            count++;
-                            countSem.release();
-                            Thread.sleep(rem.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime());
-                            SystemTray tray = SystemTray.getSystemTray();
-                            Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
-                            TrayIcon icon = new TrayIcon(image);
-                            tray.add(icon);
-                            icon.displayMessage("Reminder", rem.getMessage(), TrayIcon.MessageType.WARNING);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }));
-                    rem.getThread().start();
-                } else {
+                if (rem.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime() > 100) {
                     rem.setThread(new Thread(() -> {
                         try {
                             countSem.acquire();
@@ -154,6 +137,7 @@ public class Reminder {
         } catch (Exception e) {
             retVal = new ArrayList<>();
             System.out.println("An error occured while deserializing the reminder list");
+            e.printStackTrace();
         }
 
         return retVal;
@@ -171,9 +155,17 @@ public class Reminder {
         }
     }
 
+    public int compareTo(Reminder rem) {
+        return (message + time.getTime()).compareTo(rem.message + rem.time.getTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public static void main(String[] args) {
         Reminder reminder = new Reminder("Testing", Time.valueOf(LocalTime.now()));
         getReminderList().add(reminder);
-        joinAllThreads();
     }
 }
