@@ -6,13 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 
 import java.sql.Time;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -23,7 +22,7 @@ public class PopOutController implements Initializable {
 
 
     @FXML
-    private Button newReminderButton;
+    private Button settingButton;
     @FXML
     private TextArea messageText;
     @FXML
@@ -45,24 +44,29 @@ public class PopOutController implements Initializable {
         Reminder createReminder = new Reminder(message, remTime);
 
 
-        List<Reminder> rList = Reminder.getReminderList();
-        rList.add(createReminder);
-        Reminder.setReminderList(rList);
+        Reminder.getReminderList().add(createReminder);
+        MainPaneController.remList.add(createReminder);
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("MainPane.fxml"));
+        //FXMLLoader loader = new FXMLLoader();
+        //loader.setLocation(getClass().getResource("MainPane.fxml"));
         //MainPaneController controller = loader.getController();
         //controller.addRem(createReminder);
+        
+        //Stage stage = new Stage();
+        
 
-        MainLauncher.primaryStage.hide();
-        Scene scene = new Scene(loader.load());
-        MainLauncher.primaryStage.setScene(scene);
+        //MainLauncher.primaryStage.hide();
+        //Scene scene = new Scene(loader.load());
+       // MainLauncher.primaryStage.setScene(scene);
 
-        MainLauncher.primaryStage.show();
+        //MainLauncher.primaryStage.show();
         MainLauncher.primaryStage.requestFocus();
-
-        MainLauncher.primaryStage.setMinHeight(scene.getHeight());
-        MainLauncher.primaryStage.setMinWidth(scene.getWidth());
+        Stage stage = (Stage) settingButton.getScene().getWindow();
+        stage.close();
+        //MainLauncher.primaryStage.setMinHeight(scene.getHeight());
+        //MainLauncher.primaryStage.setMinWidth(scene.getWidth());
+        
+        
 
 
     }
