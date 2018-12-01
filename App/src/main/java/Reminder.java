@@ -15,9 +15,9 @@ import java.util.concurrent.Semaphore;
 public class Reminder implements Serializable {
 
     private static int count;
-    private static Semaphore countSem = new Semaphore(1);    
-    public static Semaphore listSem = new Semaphore(1);
-    private transient Thread thread;    
+    private static Semaphore countSem = new Semaphore(1);
+    private static Semaphore listSem = new Semaphore(1);
+    private transient Thread thread;
     private static List<Reminder> reminderList = deserializeList();
 
     private Time time;
@@ -59,7 +59,21 @@ public class Reminder implements Serializable {
     }
 
     public static void setReminderList(List<Reminder> reminderList) {
-        Reminder.reminderList = reminderList;
+        try {
+            listSem.acquire();
+            Reminder.reminderList = reminderList;
+            listSem.release();
+        } catch (InterruptedException e) {
+
+        }
+    }
+
+    public static Semaphore getListSem() {
+        return listSem;
+    }
+
+    public static void setListSem(Semaphore listSem) {
+        Reminder.listSem = listSem;
     }
 
     public Thread getThread() {
@@ -130,7 +144,7 @@ public class Reminder implements Serializable {
                                 TrayIcon icon = new TrayIcon(Toolkit.getDefaultToolkit().createImage("alert.png"));
                                 icon.setToolTip("Barrett Reminders");
                                 SystemTray.getSystemTray().add(icon);
-                                icon.displayMessage("Reminder", me.getMessage(), TrayIcon.MessageType.WARNING);                             
+                                icon.displayMessage("Reminder", me.getMessage(), TrayIcon.MessageType.WARNING);
                                 listSem.acquire();
                                 reminderList.remove(me);
                                 listSem.release();
