@@ -66,9 +66,11 @@ public class MainPaneController implements Initializable {
         try {
             remListSem.acquire();
             remList = FXCollections.observableArrayList();
+            Reminder.getListSem().acquire();
             for (Reminder rem : Reminder.getReminderList()) {
                 remList.add(rem);
             }
+            Reminder.getListSem().release();
             reminderListView.setItems(remList);
         } catch (InterruptedException e) {
         }
@@ -89,9 +91,11 @@ public class MainPaneController implements Initializable {
                 try {
                     remListSem.acquire();
                     remList = FXCollections.observableArrayList();
+                    Reminder.getListSem().acquire();
                     for (Reminder rem : Reminder.getReminderList()) {
                         remList.add(rem);
                     }
+                    Reminder.getListSem().release();
                     reminderListView.setItems(remList);
                     remListSem.release();
                     reminderListView.refresh();
