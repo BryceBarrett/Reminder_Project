@@ -1,14 +1,11 @@
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.Scene;
 
 import java.sql.Time;
 import javafx.stage.Stage;
@@ -45,7 +42,10 @@ public class PopOutController implements Initializable {
 
 
         Reminder.getReminderList().add(createReminder);
+        
+        MainPaneController.remListSem.acquire();
         MainPaneController.remList.add(createReminder);
+        MainPaneController.remListSem.release();
 
         //FXMLLoader loader = new FXMLLoader();
         //loader.setLocation(getClass().getResource("MainPane.fxml"));

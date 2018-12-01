@@ -5,9 +5,8 @@
  */
 
 import java.net.URL;
-import java.sql.Time;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Semaphore;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,8 +19,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -44,9 +41,9 @@ public class MainPaneController implements Initializable {
     private Button quitButton;
     @FXML
     private HBox rootHbox;
-    
-    public static ObservableList<Reminder> remList;
 
+    public static Semaphore remListSem = new Semaphore(1);
+    public static ObservableList<Reminder> remList;
 
     //private ObservableList<Reminder> remList = FXCollections.observableArrayList();
     /**
@@ -54,17 +51,6 @@ public class MainPaneController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Time remTime = Time.valueOf("19:44:44");
-        Reminder createReminder = new Reminder("test", remTime);
-
-        List<Reminder> rList = Reminder.getReminderList();
-        rList.add(createReminder);
-        Reminder.setReminderList(rList);
-
-        for (Reminder rem : Reminder.getReminderList()) {
-            System.out.println(rem.getMessage());
-        }
-
         reminderListView.setCellFactory(param -> {
             ListCell<Reminder> cell = new ListCell<Reminder>() {
                 @Override
@@ -77,14 +63,18 @@ public class MainPaneController implements Initializable {
             };
             return cell;
         });
-
-        remList = FXCollections.observableArrayList();
-        for (Reminder rem : Reminder.getReminderList()) {
-            remList.add(rem);
+        try {
+            remListSem.acquire();
+            remList = FXCollections.observableArrayList();
+            for (Reminder rem : Reminder.getReminderList()) {
+                remList.add(rem);
+            }
+            reminderListView.setItems(remList);
+        } catch (InterruptedException e) {
         }
-        reminderListView.setItems(remList);
+        remListSem.release();
 
-      /*  rootHbox.focusedProperty().addListener(listener -> {
+        /*  rootHbox.focusedProperty().addListener(listener -> {
             if (rootHbox.focusedProperty().getValue()) {
                 final ObservableList<Reminder> r = FXCollections.observableArrayList();
                 for (Reminder rem : Reminder.getReminderList()) {
@@ -94,6 +84,23 @@ public class MainPaneController implements Initializable {
                 reminderListView.refresh();
             }
         }); */
+        Thread thread = new Thread(() -> {
+            while (true) {
+                try {
+                    remListSem.acquire();
+                    remList = FXCollections.observableArrayList();
+                    for (Reminder rem : Reminder.getReminderList()) {
+                        remList.add(rem);
+                    }
+                    reminderListView.setItems(remList);
+                    remListSem.release();
+                    reminderListView.refresh();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+            }
+        });
+        thread.start();
     }
 
     @FXML

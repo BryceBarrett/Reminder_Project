@@ -34,6 +34,7 @@ public class MainLauncher extends Application {
         });
 
         scene.setRoot(FXMLLoader.load(getClass().getResource("MainPane.fxml")));
+        primaryStage.setTitle("Barrett Reminders");
 
         primaryStage.show();
         primaryStage.requestFocus();

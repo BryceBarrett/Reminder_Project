@@ -15,9 +15,11 @@ import java.util.concurrent.Semaphore;
 public class Reminder implements Serializable {
 
     private static int count;
-    private static Semaphore countSem = new Semaphore(1);
+    private static Semaphore countSem = new Semaphore(1);    
+    public static Semaphore listSem = new Semaphore(1);
+    private transient Thread thread;    
     private static List<Reminder> reminderList = deserializeList();
-    private transient Thread thread;
+
     private Time time;
     private String message;
 
@@ -30,11 +32,13 @@ public class Reminder implements Serializable {
                 count++;
                 countSem.release();
                 Thread.sleep(time.getTime() - Time.valueOf(LocalTime.now()).getTime());
-                SystemTray tray = SystemTray.getSystemTray();
-                Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
-                TrayIcon icon = new TrayIcon(image);
-                tray.add(icon);
+                TrayIcon icon = new TrayIcon(Toolkit.getDefaultToolkit().createImage("alert.png"));
+                icon.setToolTip("Barrett Reminders");
+                SystemTray.getSystemTray().add(icon);
                 icon.displayMessage("Reminder", message, TrayIcon.MessageType.WARNING);
+                listSem.acquire();
+                reminderList.remove(this);
+                listSem.release();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -107,33 +111,45 @@ public class Reminder implements Serializable {
         List<Reminder> retVal;
         try {
             File file = new File(File.separator + System.getProperty("user.home")
-                    + File.separator + "Reminder_Project_Barrett");
+                    + File.separator + "Reminder_Project_Barrett.ser");
             if (file.exists() && !file.isDirectory()) {
+
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
                 retVal = (ArrayList) ois.readObject();
+                List<Reminder> valuesToBeRemoved = new ArrayList<>();
+                listSem.acquire();
+                for (Reminder rem : retVal) {
+                    if (rem.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime() > 100) {
+                        final Reminder me = rem;
+                        rem.setThread(new Thread(() -> {
+                            try {
+                                countSem.acquire();
+                                count++;
+                                countSem.release();
+                                Thread.sleep(me.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime());
+                                TrayIcon icon = new TrayIcon(Toolkit.getDefaultToolkit().createImage("alert.png"));
+                                icon.setToolTip("Barrett Reminders");
+                                SystemTray.getSystemTray().add(icon);
+                                icon.displayMessage("Reminder", me.getMessage(), TrayIcon.MessageType.WARNING);                             
+                                listSem.acquire();
+                                reminderList.remove(me);
+                                listSem.release();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }));
+                        rem.getThread().start();
+                    } else {
+                        valuesToBeRemoved.add(rem);
+                    }
+                }
+                retVal.removeAll(valuesToBeRemoved);
+                listSem.release();
+
             } else {
                 retVal = new ArrayList<>();
             }
-            for (Reminder rem : retVal) {
-                if (rem.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime() > 100) {
-                    rem.setThread(new Thread(() -> {
-                        try {
-                            countSem.acquire();
-                            count++;
-                            countSem.release();
-                            Thread.sleep(rem.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime());
-                            SystemTray tray = SystemTray.getSystemTray();
-                            Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
-                            TrayIcon icon = new TrayIcon(image);
-                            tray.add(icon);
-                            icon.displayMessage("Reminder", rem.getMessage(), TrayIcon.MessageType.WARNING);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }));
-                    rem.getThread().start();
-                }
-            }
+
         } catch (Exception e) {
             retVal = new ArrayList<>();
             System.out.println("An error occured while deserializing the reminder list");
@@ -146,9 +162,11 @@ public class Reminder implements Serializable {
     public static void serializeList() {
         try {
             File file = new File(File.separator + System.getProperty("user.home")
-                    + File.separator + "Reminder_Project_Barrett");
+                    + File.separator + "Reminder_Project_Barrett.ser");
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+            listSem.acquire();
             oos.writeObject(reminderList);
+            listSem.release();
         } catch (Exception e) {
             System.out.println("Reminder List serializing issue occured");
             e.printStackTrace();
