@@ -1,4 +1,5 @@
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,20 +39,27 @@ public class ModController implements Initializable {
 
         String message = messageText.getText();
         Time remTime = Time.valueOf(timeText.getText());
-        Reminder createReminder = new Reminder(message, remTime);
 
-        System.out.println();
+        if(remTime.getTime() - Time.valueOf(LocalTime.now()).getTime() > 5000){
+            Reminder createReminder = new Reminder(message, remTime);
 
-        Reminder.getListSem().acquire();
+            System.out.println();
 
-        Reminder.getReminderList().add(createReminder);
-        MainPaneController.remList.add(createReminder);
+            Reminder.getListSem().acquire();
 
-        Reminder.getListSem().release();
+            Reminder.getReminderList().add(createReminder);
+            MainPaneController.remList.add(createReminder);
 
-        MainLauncher.primaryStage.requestFocus();
-        Stage stage = (Stage) settingButton.getScene().getWindow();
-        stage.close();
+            Reminder.getListSem().release();
+
+            MainLauncher.primaryStage.requestFocus();
+            Stage stage = (Stage) settingButton.getScene().getWindow();
+            stage.close();
+        }else{
+            MainLauncher.primaryStage.requestFocus();
+            Stage stage = (Stage) settingButton.getScene().getWindow();
+            stage.close();
+        }
 
 
     }

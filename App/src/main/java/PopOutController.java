@@ -1,4 +1,5 @@
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,45 +39,29 @@ public class PopOutController implements Initializable {
 
         String message = messageText.getText();
         Time remTime = Time.valueOf(timeText.getText());
-        Reminder createReminder = new Reminder(message, remTime);
 
-/*
-        Reminder.getListSem().acquire();
-        Reminder.getReminderList().add(createReminder);
-        Reminder.getListSem().release();
-        
-        MainPaneController.remListSem.acquire();
-        MainPaneController.remList.add(createReminder);
-        MainPaneController.remListSem.release();*/
-
-        //MainPaneController.remListSem.acquire();
-        Reminder.getListSem().acquire();
-
-        Reminder.getReminderList().add(createReminder);
-        MainPaneController.remList.add(createReminder);
-
-        Reminder.getListSem().release();
-        //MainPaneController.remListSem.release();
+        if(remTime.getTime() - Time.valueOf(LocalTime.now()).getTime() > 5000) {
 
 
-        //FXMLLoader loader = new FXMLLoader();
-        //loader.setLocation(getClass().getResource("MainPane.fxml"));
-        //MainPaneController controller = loader.getController();
-        //controller.addRem(createReminder);
-        
-        //Stage stage = new Stage();
-        
+            Reminder createReminder = new Reminder(message, remTime);
 
-        //MainLauncher.primaryStage.hide();
-        //Scene scene = new Scene(loader.load());
-       // MainLauncher.primaryStage.setScene(scene);
+            Reminder.getListSem().acquire();
 
-        //MainLauncher.primaryStage.show();
-        MainLauncher.primaryStage.requestFocus();
-        Stage stage = (Stage) settingButton.getScene().getWindow();
-        stage.close();
-        //MainLauncher.primaryStage.setMinHeight(scene.getHeight());
-        //MainLauncher.primaryStage.setMinWidth(scene.getWidth());
+            Reminder.getReminderList().add(createReminder);
+            MainPaneController.remList.add(createReminder);
+
+            Reminder.getListSem().release();
+
+            MainLauncher.primaryStage.requestFocus();
+            Stage stage = (Stage) settingButton.getScene().getWindow();
+            stage.close();
+
+        }else{
+
+            MainLauncher.primaryStage.requestFocus();
+            Stage stage = (Stage) settingButton.getScene().getWindow();
+            stage.close();
+        }
         
         
 
