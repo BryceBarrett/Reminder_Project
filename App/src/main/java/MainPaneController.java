@@ -185,13 +185,11 @@ public class MainPaneController implements Initializable {
 
         if (selectedReminder != null) {
             try {
+                remListSem.acquire();
                 Reminder.getListSem().acquire();
-
                 Reminder.getReminderList().remove(selectedReminder);
-
                 Reminder.getListSem().release();
                 
-                remListSem.acquire();
                 remList.remove(selectedReminder);
                 reminderListView.refresh();
                 remListSem.release();
