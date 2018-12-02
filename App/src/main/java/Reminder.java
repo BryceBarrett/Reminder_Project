@@ -39,6 +39,8 @@ public class Reminder implements Serializable {
                 listSem.acquire();
                 reminderList.remove(this);
                 listSem.release();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -133,7 +135,7 @@ public class Reminder implements Serializable {
                 List<Reminder> valuesToBeRemoved = new ArrayList<>();
                 listSem.acquire();
                 for (Reminder rem : retVal) {
-                    if (rem.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime() > 100) {
+                    if (rem.getTime().getTime() - Time.valueOf(LocalTime.now()).getTime() > 5000) {
                         final Reminder me = rem;
                         rem.setThread(new Thread(() -> {
                             try {
@@ -148,6 +150,8 @@ public class Reminder implements Serializable {
                                 listSem.acquire();
                                 reminderList.remove(me);
                                 listSem.release();
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
