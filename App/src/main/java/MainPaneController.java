@@ -190,6 +190,8 @@ public class MainPaneController implements Initializable {
                 Reminder.getReminderList().remove(selectedReminder);
 
                 Reminder.getListSem().release();
+                
+                selectedReminder.cancel();
             } catch (Exception e) {
             }
         }
