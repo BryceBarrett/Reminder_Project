@@ -5,7 +5,6 @@
  */
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Semaphore;
 import javafx.application.Platform;
@@ -18,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
@@ -59,8 +59,13 @@ public class MainPaneController implements Initializable {
                 @Override
                 protected void updateItem(Reminder item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (item != null) {
-                        setText(item.getTime().toString() + "\n" + item.getMessage());
+                    if (item == null || empty) {
+                        setDisable(true);
+                        setGraphic(null);
+                    } else {
+                        Label text = new Label(item.getTime().toString() + "\n" + item.getMessage());
+                        setDisable(false);
+                        setGraphic(text);
                     }
                 }
             };
@@ -164,13 +169,11 @@ public class MainPaneController implements Initializable {
                 remList.add(rem);
             }
             Reminder.getListSem().release();
-            reminderListView.setItems(FXCollections.observableArrayList());
             reminderListView.setItems(remList);
             reminderListView.refresh();
             remListSem.release();
             //Reminder.getListSem().release();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
 
     }
