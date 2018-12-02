@@ -9,7 +9,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="261.0" prefWidth="487.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PopOutController">
     <children>
         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="182.0" layoutY="105.0" text="Message to Display:" />
-        <TextField fx:id="timeText" alignment="CENTER" layoutX="160.0" layoutY="63.0" />
+        <TextField fx:id="timeText" alignment="CENTER" layoutX="160.0" layoutY="63.0" promptText="Format: hh:mm:ss" />
         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="195.0" layoutY="39.0" text="Reminder Time:" />
         <Button fx:id="settingButton" layoutX="224.0" layoutY="220.0" mnemonicParsing="false" onAction="#newReminderAction" text="Set" />
         <TextArea fx:id="messageText" layoutX="146.0" layoutY="131.0" prefHeight="81.0" prefWidth="195.0" promptText="Enter reminder here. " />

@@ -15,7 +15,7 @@ import javafx.stage.Stage;
  *
  * @author brycebarrett
  */
-public class PopOutController implements Initializable {
+public class ModController implements Initializable {
 
 
     @FXML
@@ -34,53 +34,31 @@ public class PopOutController implements Initializable {
     }
 
     @FXML
-    private void newReminderAction(ActionEvent event) throws Exception {
+    private void modReminderAction(ActionEvent event) throws Exception {
 
         String message = messageText.getText();
         Time remTime = Time.valueOf(timeText.getText());
         Reminder createReminder = new Reminder(message, remTime);
 
-/*
-        Reminder.getListSem().acquire();
-        Reminder.getReminderList().add(createReminder);
-        Reminder.getListSem().release();
-        
-        MainPaneController.remListSem.acquire();
-        MainPaneController.remList.add(createReminder);
-        MainPaneController.remListSem.release();*/
+        System.out.println();
 
-        //MainPaneController.remListSem.acquire();
         Reminder.getListSem().acquire();
 
         Reminder.getReminderList().add(createReminder);
         MainPaneController.remList.add(createReminder);
 
         Reminder.getListSem().release();
-        //MainPaneController.remListSem.release();
 
-
-        //FXMLLoader loader = new FXMLLoader();
-        //loader.setLocation(getClass().getResource("MainPane.fxml"));
-        //MainPaneController controller = loader.getController();
-        //controller.addRem(createReminder);
-        
-        //Stage stage = new Stage();
-        
-
-        //MainLauncher.primaryStage.hide();
-        //Scene scene = new Scene(loader.load());
-       // MainLauncher.primaryStage.setScene(scene);
-
-        //MainLauncher.primaryStage.show();
         MainLauncher.primaryStage.requestFocus();
         Stage stage = (Stage) settingButton.getScene().getWindow();
         stage.close();
-        //MainLauncher.primaryStage.setMinHeight(scene.getHeight());
-        //MainLauncher.primaryStage.setMinWidth(scene.getWidth());
-        
-        
 
 
+    }
+
+    public void initValues(String message, String timeIn){
+        messageText.setText(message);
+        timeText.setText(timeIn);
     }
 
 }

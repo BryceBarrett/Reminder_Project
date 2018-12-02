@@ -5,6 +5,7 @@
  */
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Semaphore;
 import javafx.application.Platform;
@@ -45,6 +46,8 @@ public class MainPaneController implements Initializable {
     public static Semaphore remListSem = new Semaphore(1);
     public static ObservableList<Reminder> remList;
 
+    public static Reminder selectedReminder = null;
+
     //private ObservableList<Reminder> remList = FXCollections.observableArrayList();
     /**
      * Initializes the controller class.
@@ -64,7 +67,8 @@ public class MainPaneController implements Initializable {
             return cell;
         });
         try {
-            remListSem.acquire();
+            //Reminder.getListSem().acquire();
+           remListSem.acquire();
             remList = FXCollections.observableArrayList();
             Reminder.getListSem().acquire();
             for (Reminder rem : Reminder.getReminderList()) {
@@ -75,6 +79,7 @@ public class MainPaneController implements Initializable {
         } catch (InterruptedException e) {
         }
         remListSem.release();
+        //Reminder.getListSem().release();
 
         /*  rootHbox.focusedProperty().addListener(listener -> {
             if (rootHbox.focusedProperty().getValue()) {
@@ -89,6 +94,7 @@ public class MainPaneController implements Initializable {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
+                    //Reminder.getListSem().acquire();
                     remListSem.acquire();
                     remList = FXCollections.observableArrayList();
                     Reminder.getListSem().acquire();
@@ -97,8 +103,9 @@ public class MainPaneController implements Initializable {
                     }
                     Reminder.getListSem().release();
                     reminderListView.setItems(remList);
-                    remListSem.release();
                     reminderListView.refresh();
+                    remListSem.release();
+                    //Reminder.getListSem().release();
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                 }
@@ -129,10 +136,73 @@ public class MainPaneController implements Initializable {
 
     @FXML
     private void deleteReminderAction(ActionEvent event) {
+        selectedReminder = reminderListView.getSelectionModel().getSelectedItem();
+
+        if(selectedReminder != null) {
+            try {
+                Reminder.getListSem().acquire();
+
+                Reminder.getReminderList().remove(selectedReminder);
+
+                Reminder.getListSem().release();
+            } catch (Exception e) {
+            }
+        }
+
+        selectedReminder = null;
+
+        try {
+            //Reminder.getListSem().acquire();
+            remListSem.acquire();
+            remList = FXCollections.observableArrayList();
+            Reminder.getListSem().acquire();
+            for (Reminder rem : Reminder.getReminderList()) {
+                remList.add(rem);
+            }
+            Reminder.getListSem().release();
+            reminderListView.setItems(FXCollections.observableArrayList());
+            reminderListView.setItems(remList);
+            reminderListView.refresh();
+            remListSem.release();
+            //Reminder.getListSem().release();
+        } catch (InterruptedException e) {
+        }
+
+
+
     }
 
     @FXML
-    private void modifyReminderAction(ActionEvent event) {
+    private void modifyReminderAction(ActionEvent event) throws Exception {
+
+        selectedReminder = reminderListView.getSelectionModel().getSelectedItem();
+
+        if(selectedReminder != null) {
+            try {
+                Reminder.getListSem().acquire();
+
+                Reminder.getReminderList().remove(selectedReminder);
+
+                Reminder.getListSem().release();
+            } catch (Exception e) {
+            }
+        }
+
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("ModRem.fxml"));
+        loader.load();
+
+        ModController controller = loader.getController();
+        controller.initValues(selectedReminder.getMessage(), selectedReminder.getTime().toString());
+
+        Parent root = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+
+        selectedReminder = null;
+        
     }
 
     @FXML
