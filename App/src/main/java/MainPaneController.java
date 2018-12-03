@@ -64,6 +64,8 @@ public class MainPaneController implements Initializable {
                         setGraphic(null);
                     } else {
                         Label text = new Label(item.getTime().toString() + "\n" + item.getMessage());
+                        text.setWrapText(true);
+                        text.setMaxWidth(165);
                         setDisable(false);
                         setGraphic(text);
                     }
