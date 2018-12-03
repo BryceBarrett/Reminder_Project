@@ -6,12 +6,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="261.0" prefWidth="487.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PopOutController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="268.0" prefWidth="487.0" stylesheets="@Popouts.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PopOutController">
     <children>
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="182.0" layoutY="105.0" text="Message to Display:" />
-        <TextField fx:id="timeText" alignment="CENTER" layoutX="160.0" layoutY="63.0" promptText="Format: hh:mm:ss" />
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="195.0" layoutY="39.0" text="Reminder Time:" />
-        <Button fx:id="settingButton" layoutX="224.0" layoutY="220.0" mnemonicParsing="false" onAction="#newReminderAction" text="Set" />
-        <TextArea fx:id="messageText" layoutX="146.0" layoutY="131.0" prefHeight="81.0" prefWidth="195.0" promptText="Enter reminder here. " />
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="166.0" layoutY="99.0" text="Message to Display:" />
+        <TextField fx:id="timeText" alignment="CENTER" focusTraversable="false" layoutX="127.0" layoutY="44.0" promptText="Format: hh:mm:ss" />
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="181.0" layoutY="23.0" text="Reminder Time:" />
+        <Button fx:id="settingButton" layoutX="214.0" layoutY="215.0" mnemonicParsing="false" onAction="#newReminderAction" text="Set" />
+        <TextArea fx:id="messageText" focusTraversable="false" layoutX="146.0" layoutY="120.0" prefHeight="81.0" prefWidth="195.0" promptText="Enter reminder here. " />
     </children>
 </AnchorPane>
