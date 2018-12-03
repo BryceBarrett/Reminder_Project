@@ -185,6 +185,7 @@ public class Reminder implements Serializable {
             listSem.acquire();
             oos.writeObject(reminderList);
             listSem.release();
+            oos.close();
         } catch (Exception e) {
             System.out.println("Reminder List serializing issue occured");
             e.printStackTrace();
