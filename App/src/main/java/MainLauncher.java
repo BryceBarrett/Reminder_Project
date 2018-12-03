@@ -21,6 +21,8 @@ public class MainLauncher extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         this.primaryStage = primaryStage;
+        
+        Platform.setImplicitExit(false);
 
         Parent root = new AnchorPane();
         Scene scene = new Scene(root);

@@ -46,11 +46,13 @@ public class PopOutController implements Initializable {
             Reminder createReminder = new Reminder(message, remTime);
 
             Reminder.getListSem().acquire();
-
-            Reminder.getReminderList().add(createReminder);
-            MainPaneController.remList.add(createReminder);
-
+            Reminder.getReminderList().add(createReminder);            
             Reminder.getListSem().release();
+
+            MainPaneController.remListSem.acquire();
+            MainPaneController.remList.add(createReminder);
+            MainPaneController.remListSem.release();
+
 
             MainLauncher.primaryStage.requestFocus();
             Stage stage = (Stage) settingButton.getScene().getWindow();

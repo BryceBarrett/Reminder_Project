@@ -99,19 +99,22 @@ public class MainPaneController implements Initializable {
         }); */
         Thread thread = new Thread(() -> {
             while (true) {
-                try {
-                    //Reminder.getListSem().acquire();
-                    remListSem.acquire();
-                    remList = FXCollections.observableArrayList();
-                    Reminder.getListSem().acquire();
-                    for (Reminder rem : Reminder.getReminderList()) {
-                        remList.add(rem);
+                Platform.runLater(() -> {
+                    try {
+                        remListSem.acquire();
+                        remList = FXCollections.observableArrayList();
+                        Reminder.getListSem().acquire();
+                        for (Reminder rem : Reminder.getReminderList()) {
+                            remList.add(rem);
+                        }
+                        Reminder.getListSem().release();
+                        reminderListView.setItems(remList);
+                        reminderListView.refresh();
+                        remListSem.release();
+                    } catch (InterruptedException e) {
                     }
-                    Reminder.getListSem().release();
-                    reminderListView.setItems(remList);
-                    reminderListView.refresh();
-                    remListSem.release();
-                    //Reminder.getListSem().release();
+                });
+                try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                 }
@@ -189,11 +192,11 @@ public class MainPaneController implements Initializable {
                 Reminder.getListSem().acquire();
                 Reminder.getReminderList().remove(selectedReminder);
                 Reminder.getListSem().release();
-                
+
                 remList.remove(selectedReminder);
                 reminderListView.refresh();
                 remListSem.release();
-                
+
                 selectedReminder.cancel();
             } catch (Exception e) {
             }
